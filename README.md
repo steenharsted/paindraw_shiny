@@ -1,4 +1,4 @@
-# paindraw_shiny
+# paindraw_shiny <img src="img/paindraw-shiny-logo.png" align="right" height="220" alt="paindraw shiny logo" />
 
 A Shiny app for collecting pain drawings. The user draws on a background image and downloads the drawing as JSON (data) and PNG (image).
 
