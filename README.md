@@ -2,17 +2,17 @@
 
 A Shiny app for collecting pain drawings. The user draws on a background image and downloads the drawing as JSON (data) and PNG (image).
 
-The JSON follows the format of the PainDrawEM REDCap external module, so drawings can be analysed with the R package paindrawr in the same way as REDCap data. Collect with paindraw. Analyse with paindrawr.
+The JSON follows the format of the PainDrawEM REDCap external module, so drawings can be analysed with the R package paindrawr in the same way as REDCap data.
 
-```r
-library(paindrawr)
-pdr_import_json("1.json") |>
-  pdr_plot_xy(background_image = "www/backgrounds/bg_full_body.png")
-```
+<br>
+
+| Screenshot of the app |
+|:--:|
+| ![paindraw_shiny: choose a background, draw with spray or pen, download JSON and PNG](img/screenshot.png) |
+
+<br>
 
 ## Run
-
-Source code: <https://github.com/steenharsted/paindraw_shiny>. Report bugs and ideas at <https://github.com/steenharsted/paindraw_shiny/issues>.
 
 ```bash
 git clone https://github.com/steenharsted/paindraw_shiny.git
@@ -24,13 +24,7 @@ shiny::runApp("paindraw_shiny")
 
 Dependencies are listed in `DESCRIPTION`: shiny, bslib, jsonlite, png, base64enc, zip.
 
-## Test
-
-```r
-testthat::test_dir("tests/testthat")
-```
-
-The round-trip tests need paindrawr installed; they are skipped otherwise.
+<br>
 
 ## Layout
 
@@ -43,13 +37,19 @@ The round-trip tests need paindrawr installed; they are skipped otherwise.
 
 Nothing is written to the server. Drawings exist only in the browser session and leave as downloads.
 
+<br>
+
 ## How to cite
 
 If you use paindraw_shiny in research, please cite it. See [CITATION.cff](CITATION.cff); a formal reference will be added when available. For analyses, please also cite paindrawr (<https://github.com/steenharsted/paindrawr>).
 
+<br>
+
 ## Credits
 
 The drawing code in `www/js/paindraw_shiny.js` is ported from the PainDrawEM REDCap external module (GPL-3; see its README for authors). The output format is the PainDrawEM JSON format.
+
+<br>
 
 ## Licence
 
