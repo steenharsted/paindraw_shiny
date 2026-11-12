@@ -12,8 +12,14 @@ pdr_import_json("1.json") |>
 
 ## Run
 
+Source code: <https://github.com/steenharsted/paindraw_shiny>. Report bugs and ideas at <https://github.com/steenharsted/paindraw_shiny/issues>.
+
+```bash
+git clone https://github.com/steenharsted/paindraw_shiny.git
+```
+
 ```r
-shiny::runApp()
+shiny::runApp("paindraw_shiny")
 ```
 
 Dependencies are listed in `DESCRIPTION`: shiny, bslib, jsonlite, png, base64enc, zip.
@@ -39,7 +45,7 @@ Nothing is written to the server. Drawings exist only in the browser session and
 
 ## How to cite
 
-If you use paindraw_shiny in research, please cite it. See [CITATION.cff](CITATION.cff); a formal reference will be added when available. For analyses, please also cite paindrawr (<https://github.com/steenharsted/PainDrawR>).
+If you use paindraw_shiny in research, please cite it. See [CITATION.cff](CITATION.cff); a formal reference will be added when available. For analyses, please also cite paindrawr (<https://github.com/steenharsted/paindrawr>).
 
 ## Credits
 
