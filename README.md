@@ -14,7 +14,7 @@ The JSON follows the format of the PainDrawEM REDCap external module, so drawing
 
 ## Run
 
-Try it online: <https://shinylab.srv.sdu.dk/paindraw_shiny/>
+Try it online: <https://shinylab.sdu.dk/paindraw_shiny/>
 
 Or run it locally:
 
