@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Local agent instructions
+AGENTS.md
+
+# Local, never pushed (notes, drafts for other projects)
+local/

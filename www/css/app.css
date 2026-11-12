@@ -1,0 +1,29 @@
+/* The canvas keeps its own pixel size (w x h) but is shown scaled down to fit.
+   No CSS border: it would shift the pointer-to-pixel mapping; use an outline. */
+.pd-canvas {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 85vh;
+  outline: 1px solid #adb5bd;
+  background: #fff;
+  cursor: crosshair;
+  touch-action: none;           /* no scrolling/zooming while drawing on touch screens */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.pd-canvas-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.pd-downloads .btn {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}

@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use paindraw_shiny in research, please cite it as below."
+title: "paindraw_shiny: collect pain drawings in the PainDrawEM data format"
+type: software
+version: 0.1.0
+license: GPL-3.0-or-later
+authors:
+  - family-names: Harsted
+    given-names: Steen
+    email: sharsted@mmmi.sdu.dk
+    orcid: "https://orcid.org/0000-0002-1879-2224"
+  - family-names: O'Neill
+    given-names: Søren
+    email: soeren.oneill@rsyd.dk
+    orcid: "https://orcid.org/0000-0002-8064-7001"
