@@ -5,6 +5,8 @@ pd_config <- list(
   # PainDrawEM clamps the canvas width to this (redcap_module_save_configuration)
   max_canvas_width = 796L,
   default_background = "bg_full_body",
+  # Header logo, relative to www/. Set to NULL to show no logo.
+  logo = "img/paindraw-shiny-logo.png",
   max_id_chars = 100L,
   # Limits on what a (possibly hostile) browser may send
   max_strokes = 5000L,
