@@ -24,12 +24,12 @@ test_that("json, png and zip downloads are built", {
   bg <- test_background()
   json <- pd_make_download("json", "a b", bg, download_state(), "0.1.0")
   expect_equal(json$filename, "a_b.json")
-  expect_equal(jsonlite::fromJSON(rawToChar(json$bytes))$id, "a b")
+  expect_equal(jsonlite::fromJSON(rawToChar(json$bytes))$drawing_id, "a b")
 
   png <- pd_make_download("png", "a b", bg, download_state(), "0.1.0")
   expect_equal(png$filename, "a_b.png")
   expect_equal(
-    attr(png::readPNG(png$bytes, info = TRUE), "info")$text[["Draw_id"]],
+    attr(png::readPNG(png$bytes, info = TRUE), "info")$text[["drawing_id"]],
     "a b"
   )
 

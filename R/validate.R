@@ -1,6 +1,6 @@
 # Validation of stroke data sent by the browser.
-# R port of PainDrawEM's validateJsonInput() (PainDraw.php), plus limits and a
-# bounds check of our own. The browser is untrusted: validate everything.
+# Checks the stroke rules of PainDraw schema 1.0 ($defs/stroke), plus limits
+# and a bounds check of our own. The browser is untrusted: validate everything.
 
 pd_abort <- function(...) {
   stop(structure(
@@ -26,13 +26,16 @@ pd_is_int <- function(x) {
     abs(x) <= .Machine$integer.max
 }
 
-pd_is_nonneg_number <- function(x) {
-  is.numeric(x) && length(x) == 1 && is.finite(x) && x >= 0
+pd_is_number <- function(x) {
+  is.numeric(x) && length(x) == 1 && is.finite(x)
 }
 
-# PHP: ^(0(\.[0-9]{1,2})?|1(\.0{1,2})?)$ , i.e. 0-1 with at most 2 decimals
+pd_is_positive_number <- function(x) {
+  pd_is_number(x) && x > 0
+}
+
 pd_is_alpha <- function(x) {
-  pd_is_nonneg_number(x) && x <= 1 && abs(x * 100 - round(x * 100)) < 1e-8
+  pd_is_number(x) && x >= 0 && x <= 1
 }
 
 pd_is_string <- function(x) {
@@ -60,8 +63,8 @@ pd_parse_strokes <- function(
 #'
 #' @param strokes List of strokes as parsed by `pd_parse_strokes()`.
 #' @param w,h Canvas size; points must lie inside the canvas.
-#' @return A cleaned list of strokes with keys in PainDrawEM order and proper
-#'   types (`sprayDensity`/`sprayRadius` are `NULL` for the pen).
+#' @return A cleaned list of strokes with keys in schema order and proper
+#'   types (`spray_density`/`spray_radius` are `NULL` for the pen).
 #'   Signals a `pd_validation_error` on invalid input.
 pd_validate_strokes <- function(
   strokes,
@@ -88,14 +91,14 @@ pd_validate_strokes <- function(
       pd_abort("stroke ", i, ": not an object.")
     }
 
-    if (!pd_is_count(d[["strokeId"]])) {
-      bad("strokeId")
+    if (!pd_is_count(d[["stroke_id"]]) || d[["stroke_id"]] < 1) {
+      bad("stroke_id")
     }
     if (
-      !pd_is_string(d[["drawInputType"]]) ||
-        !d[["drawInputType"]] %in% c("mouse", "touch")
+      !pd_is_string(d[["draw_input_type"]]) ||
+        !d[["draw_input_type"]] %in% c("mouse", "touch")
     ) {
-      bad("drawInputType")
+      bad("draw_input_type")
     }
     if (!pd_is_string(d[["tool"]]) || !d[["tool"]] %in% c("spray", "pen")) {
       bad("tool")
@@ -105,31 +108,30 @@ pd_validate_strokes <- function(
     ) {
       bad("color")
     }
-    if (!pd_is_count(d[["lineWidth"]])) {
-      bad("lineWidth")
+    if (!pd_is_count(d[["line_width"]])) {
+      bad("line_width")
     }
 
     spray <- d[["tool"]] == "spray"
     if (spray) {
-      if (!pd_is_count(d[["sprayDensity"]])) {
-        bad("sprayDensity")
+      if (!pd_is_count(d[["spray_density"]])) {
+        bad("spray_density")
       }
-      if (!pd_is_count(d[["sprayRadius"]])) bad("sprayRadius")
+      if (!pd_is_count(d[["spray_radius"]])) bad("spray_radius")
     }
     if (!pd_is_alpha(d[["alpha"]])) {
       bad("alpha")
     }
-    if (!pd_is_nonneg_number(d[["scaleFactor"]])) {
-      bad("scaleFactor")
+    if (!pd_is_positive_number(d[["scale_factor"]])) {
+      bad("scale_factor")
     }
-    # PHP checks scaleFactor here by mistake; we check dpr as intended
-    if (!pd_is_nonneg_number(d[["dpr"]])) {
-      bad("dpr")
+    if (!pd_is_positive_number(d[["device_pixel_ratio"]])) {
+      bad("device_pixel_ratio")
     }
 
-    p <- d[["p"]]
+    p <- d[["points"]]
     if (!is.list(p) || length(p) == 0) {
-      bad("p")
+      bad("points")
     }
     total_points <- total_points + length(p)
     if (total_points > max_points) {
@@ -138,9 +140,10 @@ pd_validate_strokes <- function(
     p <- lapply(p, function(pair) {
       xy <- if (is.list(pair)) pair else as.list(pair)
       if (length(xy) != 2 || !pd_is_int(xy[[1]]) || !pd_is_int(xy[[2]])) {
-        bad("p")
+        bad("points")
       }
       xy <- as.integer(c(xy[[1]], xy[[2]]))
+      # The schema allows points outside the canvas; our canvas never makes them
       if (xy[1] < 0 || xy[2] < 0 || xy[1] >= w || xy[2] >= h) {
         pd_abort("stroke ", i, ": point outside the canvas.")
       }
@@ -148,17 +151,17 @@ pd_validate_strokes <- function(
     })
 
     out[[i]] <- list(
-      strokeId = as.integer(d[["strokeId"]]),
-      drawInputType = d[["drawInputType"]],
+      stroke_id = as.integer(d[["stroke_id"]]),
+      draw_input_type = d[["draw_input_type"]],
       tool = d[["tool"]],
       color = d[["color"]],
-      lineWidth = as.integer(d[["lineWidth"]]),
-      sprayDensity = if (spray) as.integer(d[["sprayDensity"]]) else NULL,
-      sprayRadius = if (spray) as.integer(d[["sprayRadius"]]) else NULL,
+      line_width = as.integer(d[["line_width"]]),
+      spray_density = if (spray) as.integer(d[["spray_density"]]) else NULL,
+      spray_radius = if (spray) as.integer(d[["spray_radius"]]) else NULL,
       alpha = as.numeric(d[["alpha"]]),
-      scaleFactor = as.numeric(d[["scaleFactor"]]),
-      dpr = as.numeric(d[["dpr"]]),
-      p = p
+      scale_factor = as.numeric(d[["scale_factor"]]),
+      device_pixel_ratio = as.numeric(d[["device_pixel_ratio"]]),
+      points = p
     )
   }
   out

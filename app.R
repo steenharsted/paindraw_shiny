@@ -1,4 +1,4 @@
-# paindraw_shiny: collect pain drawings in the PainDrawEM data format.
+# paindraw_shiny: collect pain drawings in the PainDraw data format (schema 1.0).
 # Shiny sources the files in R/ automatically before this file.
 
 library(shiny)

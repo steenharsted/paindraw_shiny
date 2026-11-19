@@ -47,8 +47,7 @@ pd_make_download <- function(
       state$png,
       background$w,
       background$h,
-      author = paste0("paindraw_shiny_v", version),
-      draw_id = id
+      pd_png_text(version, id)
     )
   }
 

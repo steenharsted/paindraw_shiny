@@ -16,9 +16,9 @@ pd_png_dims <- function(bytes) {
 
 #' Final PNG bytes from the canvas data URL
 #'
-#' Checks that the image is a PNG of the expected size, then adds the text
-#' properties PainDrawEM adds with Imagick (`Author`, `Draw_id`).
-pd_png_from_data_url <- function(data_url, w, h, author, draw_id) {
+#' Checks that the image is a PNG of the expected size, then adds text
+#' chunks from `pd_png_text()`.
+pd_png_from_data_url <- function(data_url, w, h, text) {
   prefix <- "data:image/png;base64,"
   if (!pd_is_string(data_url) || !startsWith(data_url, prefix)) {
     stop("Invalid image data.", call. = FALSE)
@@ -32,5 +32,17 @@ pd_png_from_data_url <- function(data_url, w, h, author, draw_id) {
     stop("Image data has the wrong format or size.", call. = FALSE)
   }
   img <- png::readPNG(bytes)
-  png::writePNG(img, text = c(Author = author, Draw_id = draw_id))
+  png::writePNG(img, text = text)
+}
+
+#' Text chunks stored in the PNG (not covered by the JSON schema)
+#'
+#' `Software` is a predefined PNG keyword; the other two use the JSON key
+#' names, so a PNG can be matched to its JSON.
+pd_png_text <- function(version, drawing_id) {
+  c(
+    Software = paste(pd_config$app_name, version),
+    drawing_id = drawing_id,
+    schema_version = pd_schema_version
+  )
 }

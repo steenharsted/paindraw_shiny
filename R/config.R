@@ -62,9 +62,9 @@ pd_tool_settings <- function(
   list(
     tool = tool,
     color = pd_normalise_color(color),
-    lineWidth = clamp(line_width, "line_width"),
-    sprayDensity = clamp(spray_density, "spray_density"),
-    sprayRadius = clamp(spray_radius, "spray_radius"),
+    line_width = clamp(line_width, "line_width"),
+    spray_density = clamp(spray_density, "spray_density"),
+    spray_radius = clamp(spray_radius, "spray_radius"),
     alpha = round(
       1 -
         clamp(transparency, "transparency", pd_default_transparency(tool)) /
@@ -85,7 +85,7 @@ pd_default_transparency <- function(tool) {
 
 #' Normalise a colour to 6-digit lower-case hex
 #'
-#' PainDrawEM's validator only accepts `#rrggbb`, so `#rgb` is expanded.
+#' The schema only accepts `#rrggbb`, so `#rgb` is expanded.
 #' Anything else gives the default colour.
 pd_normalise_color <- function(color) {
   if (!is.character(color) || length(color) != 1 || is.na(color)) {

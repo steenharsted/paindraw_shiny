@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use paindraw_shiny in research, please cite it as below."
-title: "paindraw_shiny: collect pain drawings in the PainDrawEM data format"
+title: "paindraw_shiny: collect pain drawings in the PainDraw data format"
 type: software
 version: 0.1.0
 license: GPL-3.0-or-later

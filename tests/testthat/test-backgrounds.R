@@ -44,18 +44,18 @@ test_that("tool settings are clamped and converted", {
     list(
       tool = "spray",
       color = "#fc3d03",
-      lineWidth = 3L,
-      sprayDensity = 15L,
-      sprayRadius = 5L,
+      line_width = 3L,
+      spray_density = 15L,
+      spray_radius = 5L,
       alpha = 0.1
     )
   )
   s <- pd_tool_settings("eraser", "#abc", 999, -1, NULL, 33)
   expect_equal(s$tool, "spray")
   expect_equal(s$color, "#aabbcc")
-  expect_equal(s$lineWidth, 20L)
-  expect_equal(s$sprayRadius, 1L)
-  expect_equal(s$sprayDensity, 15L)
+  expect_equal(s$line_width, 20L)
+  expect_equal(s$spray_radius, 1L)
+  expect_equal(s$spray_density, 15L)
   expect_equal(s$alpha, 0.67)
   expect_equal(pd_tool_settings("pen", "red", 3, 5, 15, 0)$color, "#fc3d03")
 })

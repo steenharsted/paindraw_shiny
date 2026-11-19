@@ -1,13 +1,15 @@
-# The PainDrawEM JSON payload (see redcap_save_record() in PainDraw.php)
+# The JSON payload: PainDraw drawing schema 1.0 (urn:paindraw:drawing:1.0)
+
+pd_schema_version <- "1.0"
 
 #' Build the payload for one drawing
 #'
 #' @param id Drawing ID (already checked with `pd_check_id()`).
 #' @param background Entry from `pd_backgrounds()`.
 #' @param strokes Validated strokes from `pd_validate_strokes()`.
-#' @param version App version, e.g. "0.1.0".
+#' @param version App version, e.g. "0.1.0" (must be major.minor.patch).
 #' @param time Save time.
-#' @return A named list with keys in PainDrawEM order.
+#' @return A named list with keys in schema order.
 pd_build_payload <- function(
   id,
   background,
@@ -15,23 +17,25 @@ pd_build_payload <- function(
   version,
   time = Sys.time()
 ) {
+  if (!grepl("^[0-9]+\\.[0-9]+\\.[0-9]+$", version)) {
+    stop("App version must be major.minor.patch, not '", version, "'.")
+  }
   list(
-    v = paste0("paindraw_shiny_v", version),
-    id = id,
-    w = as.integer(background$w),
-    h = as.integer(background$h),
-    units = "px",
-    tpl = background$file,
-    tpl_md5 = background$md5,
-    view = NULL,
+    schema_version = pd_schema_version,
+    module_version = version,
     app = pd_config$app_name,
-    ts = pd_format_ts(time),
-    crc = NULL,
-    s = strokes
+    drawing_id = id,
+    timestamp = pd_format_ts(time),
+    width = as.integer(background$w),
+    height = as.integer(background$h),
+    units = "px",
+    template_file = background$file,
+    template_md5 = tolower(background$md5),
+    strokes = strokes
   )
 }
 
-#' UTC timestamp as PHP gmdate("Y-m-d\TH:i:s\Z")
+#' UTC timestamp, YYYY-MM-DDTHH:MM:SSZ
 pd_format_ts <- function(time = Sys.time()) {
   format(time, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
 }

@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paindraw:drawing:1.0",
+  "title": "PainDraw drawing, schema 1.0",
+  "description": "One pain drawing as written by paindrawEM, paindraw_shiny and read by paindrawR. Files without schema_version are the old v0.3 format and are not covered by this schema. Extra keys are allowed at all levels and are ignored by readers.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "module_version",
+    "app",
+    "drawing_id",
+    "timestamp",
+    "width",
+    "height",
+    "units",
+    "template_file",
+    "template_md5",
+    "strokes"
+  ],
+  "properties": {
+    "schema_version": {
+      "description": "Version of the JSON format (major.minor), independent of the module version.",
+      "const": "1.0"
+    },
+    "module_version": {
+      "description": "Version number of the app that wrote the file, e.g. \"1.0.0\".",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "app": {
+      "description": "Name of the app that wrote the file, e.g. \"paindrawEM\" or \"paindraw_shiny\".",
+      "type": "string",
+      "minLength": 1
+    },
+    "drawing_id": {
+      "description": "Id of the drawing. paindrawEM writes PID<project>-R<record>-F<field>-E<event>-I<instance>, but any non-empty string is valid.",
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "description": "Time the drawing was saved, ISO 8601. Writers should use UTC (YYYY-MM-DDTHH:MM:SSZ); readers accept a space instead of T, missing seconds, fractional seconds, an offset or no time zone.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[T ][0-9]{2}:[0-9]{2}(:[0-9]{2}(\\.[0-9]+)?)?(Z|[+-][0-9]{2}:?[0-9]{2})?$"
+    },
+    "width": {
+      "description": "Canvas width in px (module setting canvas_width).",
+      "type": "integer",
+      "minimum": 1
+    },
+    "height": {
+      "description": "Canvas height in px (module setting canvas_height).",
+      "type": "integer",
+      "minimum": 1
+    },
+    "units": {
+      "const": "px"
+    },
+    "template_file": {
+      "description": "File name of the background image.",
+      "type": "string",
+      "minLength": 1
+    },
+    "template_md5": {
+      "description": "MD5 of the background image, 32 lowercase hex characters.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "strokes": {
+      "description": "Strokes in drawing order. May be empty in the schema; paindrawEM does not save empty drawings. stroke_id must be unique within a drawing; this is checked later in the pipeline, not by the schema.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/stroke" }
+    }
+  },
+  "$defs": {
+    "stroke": {
+      "type": "object",
+      "required": [
+        "stroke_id",
+        "draw_input_type",
+        "tool",
+        "color",
+        "line_width",
+        "spray_density",
+        "spray_radius",
+        "alpha",
+        "scale_factor",
+        "device_pixel_ratio",
+        "points"
+      ],
+      "properties": {
+        "stroke_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "draw_input_type": {
+          "enum": ["mouse", "touch"]
+        },
+        "tool": {
+          "enum": ["spray", "pen"]
+        },
+        "color": {
+          "description": "#RRGGBB.",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "line_width": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "spray_density": {
+          "description": "Integer >= 0 for spray, null for pen.",
+          "type": ["integer", "null"]
+        },
+        "spray_radius": {
+          "description": "Integer >= 0 for spray, null for pen.",
+          "type": ["integer", "null"]
+        },
+        "alpha": {
+          "description": "Opacity, 0-1 (0 = invisible, 1 = opaque). Any number of decimals.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "scale_factor": {
+          "description": "Displayed width / canvas width.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "device_pixel_ratio": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "points": {
+          "description": "[x, y] integer pairs in canvas px. May be negative or outside the canvas.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/point" }
+        }
+      },
+      "if": {
+        "properties": { "tool": { "const": "spray" } },
+        "required": ["tool"]
+      },
+      "then": {
+        "properties": {
+          "spray_density": { "type": "integer", "minimum": 0 },
+          "spray_radius": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "else": {
+        "properties": {
+          "spray_density": { "type": "null" },
+          "spray_radius": { "type": "null" }
+        }
+      }
+    },
+    "point": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "integer" },
+        { "type": "integer" }
+      ],
+      "items": false,
+      "minItems": 2
+    }
+  }
+}

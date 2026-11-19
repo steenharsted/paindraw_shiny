@@ -1,8 +1,8 @@
 /*
  * paindraw_shiny.js -- the drawing canvas.
  *
- * Ported from PainDrawEM js/paindraw.js, so the recorded strokes match what
- * the REDCap module records.
+ * Ported from PainDrawEM js/paindraw.js. Strokes are recorded with the key
+ * names of PainDraw drawing schema 1.0 (snake_case, as in R).
  *
  * How this file talks to R (Shiny):
  *   R -> JS  session$sendCustomMessage("pd-...", list(...)) calls the
@@ -45,8 +45,8 @@
       canvas: canvas,
       ctx: canvas.getContext('2d'),
       // Tool settings, replaced by the server ("pd-settings")
-      settings: { tool: 'spray', color: '#fc3d03', lineWidth: 3,
-                  sprayDensity: 15, sprayRadius: 5, alpha: 0.1 },
+      settings: { tool: 'spray', color: '#fc3d03', line_width: 3,
+                  spray_density: 15, spray_radius: 5, alpha: 0.1 },
       background: null, // the loaded background Image; null = can't draw yet
       loadCount: 0,     // to ignore background images that finish loading too late
       token: null,      // echoed back to R, see mod_canvas.R
@@ -65,7 +65,7 @@
 
   // ---- Pointer position -> canvas pixels ----------------------------------
   // The canvas is shown scaled (CSS max-width), so divide screen pixels by the
-  // display scale, as PainDrawEM does with its scaleFactor.
+  // display scale (the stroke's scale_factor).
   function canvasPoint(pad, e) {
     const rect = pad.canvas.getBoundingClientRect();
     const sx = rect.width / pad.canvas.width;
@@ -73,7 +73,7 @@
     return {
       x: Math.round((e.clientX - rect.left) / sx),
       y: Math.round((e.clientY - rect.top) / sy),
-      scaleFactor: sx
+      scale_factor: sx
     };
   }
 
@@ -95,18 +95,18 @@
     const s = pad.settings;
     const spray = s.tool === 'spray';
     pad.current = {
-      strokeId: pad.strokes.length + 1,
+      stroke_id: pad.strokes.length + 1,
       // A stylus counts as touch, like PainDrawEM's touch emulation
-      drawInputType: e.pointerType === 'mouse' ? 'mouse' : 'touch',
+      draw_input_type: e.pointerType === 'mouse' ? 'mouse' : 'touch',
       tool: s.tool,
       color: s.color,
-      lineWidth: s.lineWidth,
-      sprayDensity: spray ? s.sprayDensity : null,
-      sprayRadius: spray ? s.sprayRadius : null,
+      line_width: s.line_width,
+      spray_density: spray ? s.spray_density : null,
+      spray_radius: spray ? s.spray_radius : null,
       alpha: s.alpha,
-      scaleFactor: pt.scaleFactor,
-      dpr: window.devicePixelRatio || 1,
-      p: [],
+      scale_factor: pt.scale_factor,
+      device_pixel_ratio: window.devicePixelRatio || 1,
+      points: [],
       seed: Math.floor(Math.random() * 4294967296)
     };
     pad.current.random = seededRandom(pad.current.seed);
@@ -135,7 +135,7 @@
   // ---- Drawing (doSpray / doPen in PainDrawEM) ----------------------------
   function addPoint(pad, x, y) {
     const stroke = pad.current;
-    stroke.p.push([x, y]);
+    stroke.points.push([x, y]);
     if (stroke.tool === 'spray') {
       drawSpray(pad.ctx, stroke, x, y); // spray: add this point's dots
     } else {
@@ -147,18 +147,18 @@
     }
   }
 
-  // sprayDensity squares of side lineWidth, randomly within sprayRadius.
+  // spray_density squares of side line_width, randomly within spray_radius.
   // Every square is painted on its own, so overlapping dots add up.
   function drawSpray(ctx, stroke, x, y) {
     ctx.globalAlpha = stroke.alpha;
     ctx.fillStyle = stroke.color;
-    const half = stroke.lineWidth * 0.5;
-    for (let i = 0; i < stroke.sprayDensity; i++) {
+    const half = stroke.line_width * 0.5;
+    for (let i = 0; i < stroke.spray_density; i++) {
       const angle = stroke.random() * 2 * Math.PI;
-      const radius = stroke.random() * stroke.sprayRadius;
+      const radius = stroke.random() * stroke.spray_radius;
       ctx.fillRect(x + radius * Math.cos(angle) - half,
                    y + radius * Math.sin(angle) - half,
-                   stroke.lineWidth, stroke.lineWidth);
+                   stroke.line_width, stroke.line_width);
     }
   }
 
@@ -169,13 +169,13 @@
     ctx.globalAlpha = stroke.alpha;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = stroke.lineWidth;
+    ctx.lineWidth = stroke.line_width; // ctx.lineWidth is the browser's name
     ctx.strokeStyle = stroke.color;
     ctx.beginPath();
-    ctx.moveTo(stroke.p[0][0], stroke.p[0][1]);
+    ctx.moveTo(stroke.points[0][0], stroke.points[0][1]);
     // Path starts with moveTo + lineTo of the first point, as in PainDrawEM.
     // (A one-point stroke is zero-length and shows nothing in Chromium.)
-    stroke.p.forEach(function (pt) { ctx.lineTo(pt[0], pt[1]); });
+    stroke.points.forEach(function (pt) { ctx.lineTo(pt[0], pt[1]); });
     ctx.stroke();
   }
 
@@ -192,7 +192,7 @@
         drawPen(ctx, stroke);
       } else {
         stroke.random = seededRandom(stroke.seed); // same dots as first time
-        stroke.p.forEach(function (pt) { drawSpray(ctx, stroke, pt[0], pt[1]); });
+        stroke.points.forEach(function (pt) { drawSpray(ctx, stroke, pt[0], pt[1]); });
       }
     });
   }
@@ -212,13 +212,14 @@
   }
 
   // ---- Report the drawing to R --------------------------------------------
-  // Only the PainDrawEM keys, in PainDrawEM order (no seed)
+  // Only the schema 1.0 stroke keys, in schema order (no seed or random)
   function exportStroke(s) {
     return {
-      strokeId: s.strokeId, drawInputType: s.drawInputType, tool: s.tool,
-      color: s.color, lineWidth: s.lineWidth, sprayDensity: s.sprayDensity,
-      sprayRadius: s.sprayRadius, alpha: s.alpha, scaleFactor: s.scaleFactor,
-      dpr: s.dpr, p: s.p
+      stroke_id: s.stroke_id, draw_input_type: s.draw_input_type,
+      tool: s.tool, color: s.color, line_width: s.line_width,
+      spray_density: s.spray_density, spray_radius: s.spray_radius,
+      alpha: s.alpha, scale_factor: s.scale_factor,
+      device_pixel_ratio: s.device_pixel_ratio, points: s.points
     };
   }
 

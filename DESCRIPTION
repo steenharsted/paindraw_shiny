@@ -1,6 +1,6 @@
 Type: Application
 Package: paindraw.shiny
-Title: Collect Pain Drawings in the PainDrawEM Data Format
+Title: Collect Pain Drawings in the PainDraw Data Format
 Version: 0.1.0
 Authors@R: c(
     person("Steen", "Harsted", email = "sharsted@mmmi.sdu.dk",
@@ -10,8 +10,9 @@ Authors@R: c(
            role = "aut",
            comment = c(ORCID = "0000-0002-8064-7001")))
 Description: A Shiny app for collecting pain drawings on a background image.
-    Drawings are downloaded as JSON in the format of the PainDrawEM REDCap
-    external module, plus a PNG, so they can be analysed with 'paindrawr'.
+    Drawings are downloaded as JSON following the PainDraw drawing schema
+    1.0 (shared with the PainDrawEM REDCap external module), plus a PNG, so
+    they can be analysed with 'paindrawr'.
 License: GPL (>= 3)
 URL: https://github.com/steenharsted/paindraw_shiny
 BugReports: https://github.com/steenharsted/paindraw_shiny/issues
