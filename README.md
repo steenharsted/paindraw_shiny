@@ -14,6 +14,10 @@ The JSON follows the PainDraw drawing schema 1.0 ([schema/paindraw_schema_1.0.js
 
 ## Run
 
+Try it online: <https://shinylab.sdu.dk/paindraw_shiny/>
+
+Or run it locally:
+
 ```bash
 git clone https://github.com/steenharsted/paindraw_shiny.git
 ```

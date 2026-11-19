@@ -27,3 +27,22 @@
   width: 100%;
   margin-bottom: 0.5rem;
 }
+
+/* Header logo, right-aligned: let the title container fill the navbar */
+.navbar-brand:has(.pd-title),
+.bslib-page-title:has(.pd-title) {
+  flex: 1;
+  margin-right: 0;
+}
+
+.pd-title {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+.pd-logo {
+  height: 100px;
+  width: auto;
+}

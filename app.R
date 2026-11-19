@@ -42,7 +42,20 @@ pd_confirm_modal <- function(title, body, ok_id, cancel_id) {
 download_ids <- c("dl_json", "dl_png", "dl_zip")
 
 ui <- page_sidebar(
-  title = pd_tr("app_title"),
+  # The logo replaces the text title; without a logo, the text is shown
+  title = if (is.null(pd_config$logo)) {
+    pd_tr("app_title")
+  } else {
+    tags$span(
+      class = "pd-title",
+      tags$img(
+        src = pd_config$logo,
+        class = "pd-logo",
+        alt = pd_tr("app_title")
+      )
+    )
+  },
+  window_title = pd_tr("app_title"),
   fillable = FALSE,
   tags$head(tags$link(rel = "stylesheet", href = "css/app.css")),
   sidebar = sidebar(
