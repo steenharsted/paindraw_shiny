@@ -11,8 +11,8 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-8064-7001")))
 Description: A Shiny app for collecting pain drawings on a background image.
     Drawings are downloaded as JSON following the PainDraw drawing schema
-    1.0 (shared with the PainDrawEM REDCap external module), plus a PNG, so
-    they can be analysed with 'paindrawr'.
+    1.0 (shared with the paindrawEM REDCap external module), plus a PNG, so
+    they can be analysed with 'paindrawR'.
 License: GPL (>= 3)
 URL: https://github.com/steenharsted/paindraw_shiny
 BugReports: https://github.com/steenharsted/paindraw_shiny/issues
@@ -27,5 +27,5 @@ Imports:
     shiny (>= 1.8.0),
     zip
 Suggests:
-    paindrawr,
+    paindrawR,
     testthat (>= 3.0.0)

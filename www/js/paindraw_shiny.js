@@ -1,7 +1,7 @@
 /*
  * paindraw_shiny.js -- the drawing canvas.
  *
- * Ported from PainDrawEM js/paindraw.js. Strokes are recorded with the key
+ * Ported from paindrawEM js/paindraw.js. Strokes are recorded with the key
  * names of PainDraw drawing schema 1.0 (snake_case, as in R).
  *
  * How this file talks to R (Shiny):
@@ -91,12 +91,12 @@
     pad.canvas.setPointerCapture(e.pointerId); // keep receiving moves outside the canvas
     pad.pointerId = e.pointerId;
 
-    // Settings are captured per stroke, at stroke start (as PainDrawEM)
+    // Settings are captured per stroke, at stroke start (as paindrawEM)
     const s = pad.settings;
     const spray = s.tool === 'spray';
     pad.current = {
       stroke_id: pad.strokes.length + 1,
-      // A stylus counts as touch, like PainDrawEM's touch emulation
+      // A stylus counts as touch, like paindrawEM's touch emulation
       draw_input_type: e.pointerType === 'mouse' ? 'mouse' : 'touch',
       tool: s.tool,
       color: s.color,
@@ -132,7 +132,7 @@
     report(pad);
   }
 
-  // ---- Drawing (doSpray / doPen in PainDrawEM) ----------------------------
+  // ---- Drawing (doSpray / doPen in paindrawEM) ----------------------------
   function addPoint(pad, x, y) {
     const stroke = pad.current;
     stroke.points.push([x, y]);
@@ -140,7 +140,7 @@
       drawSpray(pad.ctx, stroke, x, y); // spray: add this point's dots
     } else {
       // Pen: put back the canvas from before the stroke, then draw the whole
-      // stroke once. Unlike PainDrawEM, which strokes the growing path again
+      // stroke once. Unlike paindrawEM, which strokes the growing path again
       // for every point, so a semi-transparent pen line darkens to opaque.
       pad.ctx.putImageData(pad.under, 0, 0);
       drawPen(pad.ctx, stroke);
@@ -164,7 +164,7 @@
 
   // The whole pen stroke as one path, painted once: the stroke has the same
   // opacity everywhere, also where it crosses itself (like geom_path() in
-  // paindrawr). Separate strokes on top of each other do add up.
+  // paindrawR). Separate strokes on top of each other do add up.
   function drawPen(ctx, stroke) {
     ctx.globalAlpha = stroke.alpha;
     ctx.lineCap = 'round';
@@ -173,7 +173,7 @@
     ctx.strokeStyle = stroke.color;
     ctx.beginPath();
     ctx.moveTo(stroke.points[0][0], stroke.points[0][1]);
-    // Path starts with moveTo + lineTo of the first point, as in PainDrawEM.
+    // Path starts with moveTo + lineTo of the first point, as in paindrawEM.
     // (A one-point stroke is zero-length and shows nothing in Chromium.)
     stroke.points.forEach(function (pt) { ctx.lineTo(pt[0], pt[1]); });
     ctx.stroke();

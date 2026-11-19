@@ -2,7 +2,7 @@
 
 pd_config <- list(
   app_name = "paindraw_shiny",
-  # PainDrawEM clamps the canvas width to this (redcap_module_save_configuration)
+  # paindrawEM clamps the canvas width to this (redcap_module_save_configuration)
   max_canvas_width = 796L,
   default_background = "bg_full_body",
   max_id_chars = 100L,
@@ -13,7 +13,7 @@ pd_config <- list(
   max_png_chars = 40e6
 )
 
-# PainDrawEM defaults (parseModuleSettings)
+# paindrawEM defaults (parseModuleSettings)
 pd_tool_defaults <- list(
   tool = "spray",
   color = "#fc3d03",
@@ -21,8 +21,8 @@ pd_tool_defaults <- list(
   spray_radius = 5L,
   spray_density = 15L,
   transparency = 90L,
-  # Not PainDrawEM: the pen gets its own transparency, opaque by default.
-  # (A semi-transparent pen rendered as in PainDrawEM turns opaque while drawn.)
+  # Not paindrawEM: the pen gets its own transparency, opaque by default.
+  # (A semi-transparent pen rendered as in paindrawEM turns opaque while drawn.)
   pen_transparency = 0L
 )
 

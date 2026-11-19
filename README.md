@@ -2,7 +2,7 @@
 
 A Shiny app for collecting pain drawings. The user draws on a background image and downloads the drawing as JSON (data) and PNG (image).
 
-The JSON follows the PainDraw drawing schema 1.0 ([schema/paindraw_schema_1.0.json](schema/paindraw_schema_1.0.json)), shared with the PainDrawEM REDCap external module, so drawings can be analysed with the R package paindrawr in the same way as REDCap data.
+The JSON follows the PainDraw drawing schema 1.0 ([schema/paindraw_schema_1.0.json](schema/paindraw_schema_1.0.json)), shared with the paindrawEM REDCap external module, so drawings can be analysed with the R package paindrawR in the same way as REDCap data.
 
 <br>
 
@@ -32,8 +32,8 @@ Dependencies are listed in `DESCRIPTION`: shiny, bslib, jsonlite, png, base64enc
 |---|---|
 | `app.R` | UI and server |
 | `R/` | Plain R functions (sourced automatically by Shiny): backgrounds, validation, JSON payload, PNG, IDs, canvas module, UI strings |
-| `www/js/paindraw_shiny.js` | The drawing canvas (port of PainDrawEM `js/paindraw.js`) |
-| `www/backgrounds/` | Built-in `bg_*.png` images, copied from paindrawr |
+| `www/js/paindraw_shiny.js` | The drawing canvas (port of paindrawEM `js/paindraw.js`) |
+| `www/backgrounds/` | Built-in `bg_*.png` images, copied from paindrawR |
 | `schema/` | JSON Schema of the output format (PainDraw drawing schema 1.0) |
 
 Nothing is written to the server. Drawings exist only in the browser session and leave as downloads.
@@ -42,13 +42,13 @@ Nothing is written to the server. Drawings exist only in the browser session and
 
 ## How to cite
 
-If you use paindraw_shiny in research, please cite it. See [CITATION.cff](CITATION.cff); a formal reference will be added when available. For analyses, please also cite paindrawr (<https://github.com/steenharsted/paindrawr>).
+If you use paindraw_shiny in research, please cite it. See [CITATION.cff](CITATION.cff); a formal reference will be added when available. For analyses, please also cite paindrawR (<https://github.com/steenharsted/paindrawR>).
 
 <br>
 
 ## Credits
 
-The drawing code in `www/js/paindraw_shiny.js` is ported from the PainDrawEM REDCap external module (GPL-3; see its README for authors). The output format is the PainDraw drawing schema 1.0.
+The drawing code in `www/js/paindraw_shiny.js` is ported from the paindrawEM REDCap external module (GPL-3; see its README for authors). The output format is the PainDraw drawing schema 1.0.
 
 <br>
 

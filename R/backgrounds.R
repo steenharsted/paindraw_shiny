@@ -3,7 +3,7 @@
 #' Registry of built-in backgrounds
 #'
 #' One entry per `bg_*.png` in `dir`, named by file name without extension.
-#' `w`/`h` are the canvas size (native size, clamped as PainDrawEM does) and
+#' `w`/`h` are the canvas size (native size, clamped as paindrawEM does) and
 #' `md5` is computed on the exact bytes that are served to the browser.
 pd_backgrounds <- function(
   dir = "www/backgrounds",
@@ -33,7 +33,7 @@ pd_backgrounds <- function(
   bgs
 }
 
-#' Canvas size from the native image size (PainDrawEM rule)
+#' Canvas size from the native image size (paindrawEM rule)
 #'
 #' Native size; if wider than `max_w`, scale down to `max_w` keeping the
 #' aspect ratio. `floor(x + 0.5)` mirrors PHP's round() (half away from zero).

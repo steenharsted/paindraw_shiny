@@ -53,7 +53,7 @@ pd_strings <- list(
   footer = paste(
     "paindraw_shiny v%s by Steen Harsted and S\u00f8ren O'Neill.",
     "Free software under the GNU GPL (version 3 or later).",
-    "If you use it in research, please cite paindraw_shiny and paindrawr.",
+    "If you use it in research, please cite paindraw_shiny and paindrawR.",
     "Nothing you draw is stored on the server."
   ),
 

@@ -40,7 +40,7 @@ pd_format_ts <- function(time = Sys.time()) {
   format(time, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC")
 }
 
-#' Serialise a payload to JSON, ending in "\r\n" like PainDrawEM
+#' Serialise a payload to JSON, ending in "\r\n" like paindrawEM
 pd_payload_json <- function(payload) {
   json <- jsonlite::toJSON(
     payload,

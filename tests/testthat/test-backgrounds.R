@@ -10,7 +10,7 @@ test_that("labels are derived from file names", {
   )
 })
 
-test_that("canvas width is clamped to 796 px as in PainDrawEM", {
+test_that("canvas width is clamped to 796 px as in paindrawEM", {
   expect_equal(pd_canvas_size(705, 1102), c(w = 705L, h = 1102L))
   expect_equal(pd_canvas_size(992, 1586), c(w = 796L, h = 1273L)) # 1272.66
   expect_equal(pd_canvas_size(1592, 1001), c(w = 796L, h = 501L)) # 500.5 rounds up, like PHP
@@ -22,7 +22,7 @@ test_that("the registry has dims and md5 of the served files", {
   z <- bgs$bg_zealand
   expect_equal(z$file, "bg_zealand.png")
   expect_equal(c(z$w, z$h), c(705L, 1102L))
-  # Same bytes as zealand.png used in the paindrawr reference JSON
+  # Same bytes as zealand.png used in the paindrawR reference JSON
   expect_equal(z$md5, "bfea4dfa78c3f7fbe68cd312450d6cef")
   expect_equal(z$url, "backgrounds/bg_zealand.png")
   for (bg in bgs) {
